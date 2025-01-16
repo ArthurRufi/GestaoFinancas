@@ -5,7 +5,7 @@ class User(models.Model):
     name = models.CharField(max_length=255)
     userEmail = models.EmailField()
     dataDeNascimento =models.DateField()
-    senhaUser = models.CharField()
+    senhaUser = models.CharField(max_length=500)
 
     class Meta:
         ordering = ['name']

@@ -6,6 +6,8 @@ class ReceitasDespesas(models.Model):
     tipo = models.IntegerField(default=2)
     valor = models.FloatField(default=0.0)
     dataDaMovimentacao = models.DateTimeField()
-    descrição = models.CharField()
+    descricao = models.CharField(max_length=500)
+    usuario_id = models.IntegerField()
+
 
 
