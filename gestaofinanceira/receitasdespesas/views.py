@@ -9,7 +9,7 @@ from .serializers import ReceitaSerializer
 
 class ConsultarReceitasAPIView(APIView):
     def get(self, request):
-        user_id = request.data.get('user_id')
+        user_id = request.data.get('usuario_id')
         tipo = request.data.get('tipo')
 
         if not user_id or not tipo:
@@ -40,6 +40,7 @@ class ConsultarReceitasAPIView(APIView):
 
         # Retornar a resposta com os dados serializados
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
         
 class AdicionarReceitaAPI(APIView):
     def post(self, request, *args, **kwargs):

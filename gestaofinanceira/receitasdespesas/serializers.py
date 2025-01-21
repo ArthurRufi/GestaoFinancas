@@ -16,7 +16,7 @@ class DespesaSerializer(serializers.ModelSerializer):
 class ReceitaSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReceitasDespesas
-        fields = ['id', 'tipo', 'valor', 'dataDaMovimentacao', 'descricao']
+        fields = ['id', 'tipo', 'valor', 'dataDaMovimentacao', 'descricao', 'usuario_id']
     
     def validate_tipo(self, value):
         if value != 1:
