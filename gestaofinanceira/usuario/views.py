@@ -30,7 +30,7 @@ class EncontrarUsuario(APIView):
    def get(self, request, usuario):
         try:
             # Busca múltiplos usuários pelo nome
-            users = User.objects.filter(name=usuario)
+            users = User.objects.filter(userEmail=usuario)
 
             if not users.exists():
                 return Response({"error": "Nenhum usuário encontrado."}, status=status.HTTP_404_NOT_FOUND)
