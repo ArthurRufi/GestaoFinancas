@@ -1,47 +1,65 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from .models import ReceitasDespesas
 from .serializers import ReceitaSerializer
-
-
+import pytz
 
 class ConsultarReceitasAPIView(APIView):
     def get(self, request):
-        user_id = request.data.get('usuario_id')
-        tipo = request.data.get('tipo')
+        # Acessando os parâmetros da query string da URL
+        dataInicio = request.query_params.get('dataInicio')
+        dataFim = request.query_params.get('dataFim')
+        usuario = request.query_params.get('usuario_email')
+        tipo = request.query_params.get('tipo')
 
-        if not user_id or not tipo:
+        # Verificando e convertendo as datas
+        if dataInicio:
+            try:
+                # Convertendo para o formato datetime e aplicando o fuso horário UTC
+                dataInicio = datetime.strptime(dataInicio, '%Y-%m-%d %H:%M:%S')
+                dataInicio = pytz.utc.localize(dataInicio)  # Usa pytz para definir o fuso horário UTC
+            except ValueError:
+                return Response({"error": "Formato de dataInicio inválido. Use o formato YYYY-MM-DD HH:MM:SS."},
+                                status=status.HTTP_400_BAD_REQUEST)
+
+        if dataFim:
+            try:
+                # Convertendo para o formato datetime e aplicando o fuso horário UTC
+                dataFim = datetime.strptime(dataFim, '%Y-%m-%d %H:%M:%S')
+                dataFim = pytz.utc.localize(dataFim)  # Usa pytz para definir o fuso horário UTC
+            except ValueError:
+                return Response({"error": "Formato de dataFim inválido. Use o formato YYYY-MM-DD HH:MM:SS."},
+                                status=status.HTTP_400_BAD_REQUEST)
+
+        if dataInicio and dataFim:
+            try:
+                # Filtrando as receitas/despesas no intervalo fornecido
+                queryset = ReceitasDespesas.objects.filter(
+                    dataDaMovimentacao__range=[dataInicio, dataFim]
+                )
+                
+                # Filtrando também por usuário e tipo, caso esses parâmetros sejam passados
+                if usuario:
+                    queryset = queryset.filter(usuario_email=usuario)
+                if tipo:
+                    queryset = queryset.filter(tipo=tipo)
+
+                # Serializar os resultados
+                serializer = ReceitaSerializer(queryset, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+
+            except Exception as e:
+                return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        else:
             return Response(
-                {"error": "Os parâmetros 'user_id' e 'tipo' são obrigatórios."},
+                {"error": "Os campos 'dataInicio' e 'dataFim' são obrigatórios."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        try:
-            tipo = int(tipo)
-        except ValueError:
-            return Response(
-                {"error": "'tipo' deve ser um número inteiro."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
 
-        movimentacoes = ReceitasDespesas.objects.filter(usuario_id=user_id, tipo=tipo)
-
-        # Se não houver registros, retornar uma resposta adequada
-        if not movimentacoes.exists():
-            return Response(
-                {"message": "Nenhuma movimentação encontrada."},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-
-        # Serializar os dados filtrados
-        serializer = ReceitaSerializer(movimentacoes, many=True)
-
-        # Retornar a resposta com os dados serializados
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
-        
 class AdicionarReceitaAPI(APIView):
     def post(self, request, *args, **kwargs):
         # O serializer recebe os dados da requisição

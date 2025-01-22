@@ -7,7 +7,7 @@ class ReceitasDespesas(models.Model):
     valor = models.FloatField(default=0.0)
     dataDaMovimentacao = models.DateTimeField()
     descricao = models.CharField(max_length=500)
-    usuario_id = models.IntegerField()
+    usuario_email = models.EmailField()
 
 
 
