@@ -20,6 +20,7 @@ class ConsultarReceitasAPIView(APIView):
                 # Convertendo para o formato datetime e aplicando o fuso horário UTC
                 dataInicio = datetime.strptime(dataInicio, '%Y-%m-%d %H:%M:%S')
                 dataInicio = pytz.utc.localize(dataInicio)  # Usa pytz para definir o fuso horário UTC
+                print(dataInicio)
             except ValueError:
                 return Response({"error": "Formato de dataInicio inválido. Use o formato YYYY-MM-DD HH:MM:SS."},
                                 status=status.HTTP_400_BAD_REQUEST)
@@ -29,6 +30,7 @@ class ConsultarReceitasAPIView(APIView):
                 # Convertendo para o formato datetime e aplicando o fuso horário UTC
                 dataFim = datetime.strptime(dataFim, '%Y-%m-%d %H:%M:%S')
                 dataFim = pytz.utc.localize(dataFim)  # Usa pytz para definir o fuso horário UTC
+                print (dataFim)
             except ValueError:
                 return Response({"error": "Formato de dataFim inválido. Use o formato YYYY-MM-DD HH:MM:SS."},
                                 status=status.HTTP_400_BAD_REQUEST)
@@ -43,6 +45,8 @@ class ConsultarReceitasAPIView(APIView):
                 # Filtrando também por usuário e tipo, caso esses parâmetros sejam passados
                 if usuario:
                     queryset = queryset.filter(usuario_email=usuario)
+                    print(f"Query Params: {request.query_params}")
+
                 if tipo:
                     queryset = queryset.filter(tipo=tipo)
 
