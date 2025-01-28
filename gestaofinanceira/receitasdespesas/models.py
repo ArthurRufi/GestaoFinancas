@@ -10,4 +10,6 @@ class ReceitasDespesas(models.Model):
     usuario_email = models.EmailField()
 
 
+class InforTratadas(models.Model):
+    pass
 
