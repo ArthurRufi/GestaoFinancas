@@ -65,6 +65,7 @@ class ConsultarReceitasAPIView(APIView):
 
 
 class AdicionarReceitaAPI(APIView):
+
     def post(self, request, *args, **kwargs):
         # O serializer recebe os dados da requisição
         serializer = ReceitaSerializer(data=request.data)
@@ -79,3 +80,12 @@ class AdicionarReceitaAPI(APIView):
         
         # Se os dados não forem válidos, retorna os erros com status HTTP 400 (Bad Request)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class ConsultarDespesasAPIView(APIView):
+    pass
+
+
+class AdiconarDesepesaAPIView(APIView):
+    pass
+
