@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-
+from usuario.utils.emailverify import Verify
 from .models import User
 from .serializers import UserSerializer
 
@@ -11,6 +11,8 @@ class CadastrarUsuario(APIView):
         data = request.data
         try:
             # Verifica se o email já está registrado
+            if not Verify(data.get('userEmail')).validar_email():
+                return Response({"error": "ERROR EMAIL VALIDATION: ALGO DE ERRADO COM SEU EMAIL: "}, status=status.HTTP_400_BAD_REQUEST)
             if User.objects.filter(userEmail=data.get('userEmail')).exists():
                 return Response({"error": "Usuário com este email já existe!"}, status=status.HTTP_400_BAD_REQUEST)
             
