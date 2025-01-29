@@ -6,6 +6,8 @@ from .models import ReceitasDespesas
 from .serializers import ReceitaSerializer
 import pytz
 
+
+
 class ConsultasAPIView(APIView):
     def get(self, request):
         # Acessando os parâmetros da query string da URL
