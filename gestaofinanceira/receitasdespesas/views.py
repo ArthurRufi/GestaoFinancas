@@ -6,7 +6,7 @@ from .models import ReceitasDespesas
 from .serializers import ReceitaSerializer
 import pytz
 
-class ConsultarReceitasAPIView(APIView):
+class ConsultasAPIView(APIView):
     def get(self, request):
         # Acessando os parâmetros da query string da URL
         dataInicio = request.query_params.get('dataInicio')
@@ -20,7 +20,6 @@ class ConsultarReceitasAPIView(APIView):
                 # Convertendo para o formato datetime e aplicando o fuso horário UTC
                 dataInicio = datetime.strptime(dataInicio, '%Y-%m-%d %H:%M:%S')
                 dataInicio = pytz.utc.localize(dataInicio)  # Usa pytz para definir o fuso horário UTC
-                print(dataInicio)
             except ValueError:
                 return Response({"error": "Formato de dataInicio inválido. Use o formato YYYY-MM-DD HH:MM:SS."},
                                 status=status.HTTP_400_BAD_REQUEST)
@@ -30,7 +29,6 @@ class ConsultarReceitasAPIView(APIView):
                 # Convertendo para o formato datetime e aplicando o fuso horário UTC
                 dataFim = datetime.strptime(dataFim, '%Y-%m-%d %H:%M:%S')
                 dataFim = pytz.utc.localize(dataFim)  # Usa pytz para definir o fuso horário UTC
-                print (dataFim)
             except ValueError:
                 return Response({"error": "Formato de dataFim inválido. Use o formato YYYY-MM-DD HH:MM:SS."},
                                 status=status.HTTP_400_BAD_REQUEST)
@@ -41,17 +39,21 @@ class ConsultarReceitasAPIView(APIView):
                 queryset = ReceitasDespesas.objects.filter(
                     dataDaMovimentacao__range=[dataInicio, dataFim]
                 )
-                
+
                 # Filtrando também por usuário e tipo, caso esses parâmetros sejam passados
                 if usuario:
                     queryset = queryset.filter(usuario_email=usuario)
-                    print(f"Query Params: {request.query_params}")
 
                 if tipo:
                     queryset = queryset.filter(tipo=tipo)
 
+                # Verifica se há resultados antes de serializar
+                if not queryset.exists():
+                    return Response(status=status.HTTP_204_NO_CONTENT)
+
                 # Serializar os resultados
                 serializer = ReceitaSerializer(queryset, many=True)
+
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
             except Exception as e:
@@ -81,9 +83,6 @@ class AdicionarReceitaAPI(APIView):
         # Se os dados não forem válidos, retorna os erros com status HTTP 400 (Bad Request)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-
-class ConsultarDespesasAPIView(APIView):
-    pass
 
 
 class AdiconarDesepesaAPIView(APIView):
