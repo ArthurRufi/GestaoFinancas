@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -46,5 +46,24 @@ class EncontrarUsuario(APIView):
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
 
-class ApagarUsuario():
-    pass
+class ApagarUsuario(APIView):
+    def delete(self, request):
+        name = request.data.get('name')
+        userEmail = request.data.get('userEmail')
+        dataDeNascimento = request.data.get('dataDeNascimento')
+        senhaUser = request.data.get('senhaUser')
+
+        if not all([name, userEmail, senhaUser]):  # Verifica se todos os campos obrigatórios foram enviados
+            return Response({"ERROR": "Todos os campos obrigatórios devem ser preenchidos!"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Busca o usuário no banco
+        user = get_object_or_404(User, name=name, userEmail=userEmail)
+
+        # Valida a senha
+        if user.senhaUser != senhaUser:  # Comparação direta (não recomendado para senhas seguras)
+            return Response({"ERROR": "Senha incorreta!"}, status=status.HTTP_403_FORBIDDEN)
+
+
+        # Deleta o usuário
+        user.delete()
+        return Response({"message": "Usuário deletado com sucesso!"}, status=status.HTTP_204_NO_CONTENT)
