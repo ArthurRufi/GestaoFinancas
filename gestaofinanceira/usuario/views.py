@@ -67,3 +67,22 @@ class ApagarUsuario(APIView):
         # Deleta o usuário
         user.delete()
         return Response({"message": "Usuário deletado com sucesso!"}, status=status.HTTP_204_NO_CONTENT)
+
+class ModificarUsuario(APIView):
+    def patch(self, request):
+        data = request.data  # Dados recebidos da requisição
+        
+        # Verifica se o usuário existe no banco pelo email
+        user = User.objects.filter(userEmail=data.get('userEmail')).first()
+        
+        if not user:
+            return Response({"error": "Usuário não encontrado."}, status=status.HTTP_404_NOT_FOUND)
+        
+        # Atualiza apenas os campos enviados na requisição
+        serializer = UserSerializer(user, data=data, partial=True)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Usuário atualizado com sucesso!", "data": serializer.data}, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
