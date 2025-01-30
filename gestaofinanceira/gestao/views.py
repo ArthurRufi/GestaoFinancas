@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 # Create your views here.
 
 
-class graficalInformationsAPI(APIView):
+class ArtificialInteligenceForVicesAPI(APIView):
     
     #arquivo gerador para mini IA para explicar como anda os gastos pessoais
     pass
@@ -11,4 +11,5 @@ class graficalInformationsAPI(APIView):
 
 class situacaoFinanceira(APIView):
     #deve-se avisar o usuaio sobre sua situação fianceira atual
+    #pegar gastos mensais e indicar prejuizo ou lucro
     pass
