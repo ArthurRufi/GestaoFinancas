@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
+from gestaofinanceira.gestao.utils.gerador_mensagens import EmailExcessiveSpending, EmailPasswordRecover
 # Create your views here.
 
 

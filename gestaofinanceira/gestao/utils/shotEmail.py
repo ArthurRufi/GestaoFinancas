@@ -31,8 +31,3 @@ class EmailService:
             html_message=html_mensagem,
             fail_silently=False
         )
-
-emailUser = ''
-assunto = ''
-mensagem = ''
-EmailService.enviar_email_simples()
