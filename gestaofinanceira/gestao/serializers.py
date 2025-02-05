@@ -18,4 +18,8 @@ class DCGESerializer(Serializer):
                   'quantidadeDeTransacao', 'valoresTotais', 'emailUsuarioTransacao']
         
 
-class 
+class MetasFinancasSerializers(Serializer):
+    class Meta:
+        models = MetasFinanceiras
+        fields = ['diaInicial', 'diaFinal', 'metaValor',
+                  'nomeDaMeta', 'quantidadeAtual']
