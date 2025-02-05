@@ -8,6 +8,8 @@ class EmailService:
     def __init__(self, remetente="noreply@seuprojeto.com"):
         self.remetente = remetente
 
+
+    #essa merda é somente para mensageria em partes tecnicas PARA DE USAR PARA CLIENTE PORAAAAAAAAAAAAAAAAAAA!!!!!!!!!!!!!!!!!!!!!!
     def enviar_email_simples(self, destinatarios, assunto, mensagem):
         """ Envia um e-mail de texto simples """
         send_mail(
