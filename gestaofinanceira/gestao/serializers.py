@@ -13,6 +13,9 @@ class GestaoRDSerializers(Serializer):
 
 class DCGESerializer(Serializer):
     class Meta:
-        model = ReceitasDespesas
+        model = DiaComGastosExorbitantes
         fields = ['id', 'diaDasTransacoes', 'descricaoDaTransacao',
                   'quantidadeDeTransacao', 'valoresTotais', 'emailUsuarioTransacao']
+        
+
+class 
