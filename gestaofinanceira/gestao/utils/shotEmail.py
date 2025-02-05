@@ -33,3 +33,16 @@ class EmailService:
             html_message=html_mensagem,
             fail_silently=False
         )
+
+    def enviar_email_gastos_recorrentes(self, destinatarios, assunto, template, contexto):
+        html_mensagem = render_to_string(template, contexto)
+        mensagem_txt = strip_tags(html_mensagem)  # Remove HTML para fallback
+
+        send_mail(
+            assunto,
+            mensagem_txt,
+            self.remetente,
+            destinatarios,
+            html_message=html_mensagem,
+            fail_silently=False
+        )
