@@ -10,3 +10,10 @@ class DiaComGastosExorbitantes(models.Model):
     quantidadeDeTrasacoes = models.IntegerField()
     valoresTotais = models.FloatField()
     
+
+class MetasFinanceiras(models.Model):
+    diaInicial =  models.DateField(default=date.today)
+    diaFinal = models.DateField()
+    metaValor = models.FloatField()
+    nomeDaMeta = models.CharField(max_length=255)
+    quantidadeAtual = models.FloatField(default=0.0)
