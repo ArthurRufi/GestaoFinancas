@@ -67,6 +67,7 @@ class ApagarUsuario(APIView):
         # Deleta o usuário
         user.delete()
         return Response({"message": "Usuário deletado com sucesso!"}, status=status.HTTP_204_NO_CONTENT)
+    
 
 class ModificarUsuario(APIView):
     def patch(self, request):
